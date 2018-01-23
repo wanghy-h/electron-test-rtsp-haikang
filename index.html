@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>video</title>
+  <script src="js/textp.js"></script>
+  <script type="text/javascript" src="js/jsmpeg.min.js"></script>
+  <script type="text/javascript">
+
+    window.onload = function () {
+      onloadPage();
+      var canvas = document.getElementById('video-canvas1');
+      var url = 'ws://127.0.0.1:8082/';
+      var player = new JSMpeg.Player(url, { canvas: canvas });
+
+      var canvas = document.getElementById('video-canvas2');
+      var url = 'ws://127.0.0.1:8084/';
+      var player = new JSMpeg.Player(url, { canvas: canvas });
+
+      var canvas = document.getElementById('video-canvas3');
+      var url = 'ws://127.0.0.1:8086/';
+      var player = new JSMpeg.Player(url, { canvas: canvas });
+
+      var canvas = document.getElementById('video-canvas4');
+      var url = 'ws://127.0.0.1:8088/';
+      var player = new JSMpeg.Player(url, { canvas: canvas });
+
+      openLocalCamera();
+    }
+
+    function openLocalCamera() {
+      //var option = { audio: false, video: true };
+      var option = { audio: false, video: { width: { min: 1024, ideal: 1280, max: 1920 }, height: { min: 768, ideal: 1024, max: 1200 } } };
+      var media = navigator.mediaDevices.getUserMedia(option);
+
+      //var cobj = document.getElementById('canvasaa').getContext('2d');
+      media.then(show).catch((error) => { console.log(error) });
+    }
+    var mediaStreamTrack;
+    function show(mediaStream) {
+      mediaStreamTrack = mediaStream.getTracks()[0];
+      var vendorUrl = window.URL || window.webkitURL;
+      var video = document.getElementById('video');
+      console.log(video.style.width)
+      console.log(video.style.height)
+      video.src = vendorUrl.createObjectURL(mediaStream);
+      video.onloadedmetadata = function (e) {
+        video.play();
+      };
+
+    }
+  </script>
+</head>
+
+<body>
+  <div>
+    <div style=" float:left">
+      <canvas id="video-canvas1"></canvas>
+    </div>
+    <div>
+      <canvas id="video-canvas2"></canvas>
+    </div>
+    <div style=" float:left">
+      <canvas id="video-canvas3"></canvas>
+    </div>
+    <div>
+      <canvas id="video-canvas4"></canvas>
+    </div>
+  </div>
+  <div>
+    <div style=" float:left">
+      <video id="video" width="640" height="480"></video>
+    </div>
+    <div>
+      <canvas id="canvas" width="1280" height="720" style="display:none"></canvas>
+      <img id="img" width="640" height="480" />
+    </div>
+  </div>
+  <div>
+    <input type="text" name="userName" id="userName">
+    <button id='snap' onclick="snap()"> snap shot</button>
+    <button onclick="say_hello()">hello Runjs!</button>
+  </div>
+</body>
+
+</html>
